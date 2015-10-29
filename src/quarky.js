@@ -1,22 +1,28 @@
-/*! quarky 1.0.0 (https://github.com/pyrsmk/quarky) */
+/*! quarky 1.0.1 (https://github.com/pyrsmk/quarky) */
 
 var $ = window.quark.$,
-    $$ = window.quark.$$;
+    $$ = window.quark.$$,
+	scrollElement;
 
-var s, scrollElement = function() {
-		if(!s) {
-			body.scrollTop += 1;
-			s = body.scrollTop ? body : html;
-			body.scrollTop -= 1;
+/*
+	Get the base scrolling element
+	
+	Return
+		Object
+*/
+function getScrollElement() {
+	if(!scrollElement) {
+		document.body.scrollTop += 1;
+		if(document.body.scrollTop) {
+			scrollElement = document.body;
 		}
-		return s;
-	};
-
-var html, body;
-$(document).ready( function() {
-	html = document.documentElement;
-	body = document.body;
-});
+		else {
+			scrollElement = document.documentElement;
+		}
+		document.body.scrollTop -= 1;
+	}
+	return scrollElement;
+}
 
 /*
 	Return a css property, set a css property or set a list of properties
@@ -136,17 +142,21 @@ $._nodeMethods.html = function(html) {
 $._nodeMethods.text = function(text) {
 	// Get node's text
 	if(text === undefined) {
-		return this.node.innerText !== undefined ?
-			   this.node.innerText :
-			   this.node.textContent.replace(/^\s*(.+?)\s*$/, '$1');
+		if('textContent' in this.node) {
+			//return this.node.textContent.replace(/^\s*(.+?)\s*$/, '$1');
+			return this.node.textContent;
+		}
+		else {
+			return this.node.innerText;
+		}
 	}
 	// Set node's text
 	else {
-		if(this.node.innerText !== undefined) {
-			this.node.innerText = text;
+		if('textContent' in this.node) {
+			this.node.textContent = text;
 		}
 		else {
-			this.node.textContent = text;
+			this.node.innerText = text;
 		}
 		return this;
 	}
@@ -233,7 +243,7 @@ $._nodeMethods.data = function(name, value) {
 	Return a value or set one
 
 	Parameters
-		String value
+		String, Boolean value
 
 	Return
 		Array, String, Object
@@ -328,7 +338,7 @@ $._nodeMethods.append = function(nodes) {
 */
 $._nodeMethods.prepend = function(nodes) {
 	var node = this.node,
-		before = this.children()[0];
+		before = this.children()[0].node;
 	$$(nodes).forEach(function() {
 		node.insertBefore(this.node, before);
 	});
@@ -345,7 +355,7 @@ $._nodeMethods.prepend = function(nodes) {
 		Object
 */
 $._nodeMethods.before = function(nodes) {
-	var node = this.parent()[0],
+	var node = this.parent().node,
 		before = this.node;
 	$$(nodes).forEach(function() {
 		node.insertBefore(this.node, before);
@@ -438,8 +448,14 @@ $._nodeMethods.removeClass = function(cls) {
 	Return
 		Array
 */
-$._nodeMethods.getClasses = function(cls) {
-	return this.node.className.split(/\s+/);
+$._nodeMethods.getClasses = function() {
+	var classes = this.node.className.split(/\s+/);
+	if(!classes[0]) {
+		return [];
+	}
+	else {
+		return classes;
+	}
 };
 
 /*
@@ -448,7 +464,7 @@ $._nodeMethods.getClasses = function(cls) {
 	Return
 		Object
 */
-$._nodeMethods.clearClasses = function(cls) {
+$._nodeMethods.clearClasses = function() {
 	this.node.className = '';
 	return this;
 };
@@ -467,13 +483,17 @@ $._nodeMethods.width = function(value) {
 		if(this.node === window) {
 			return W.getViewportWidth();
 		}
-		else if(this.node === document || this.node === html || this.node === body) {
+		else if(
+			this.node === document ||
+			this.node === document.documentElement ||
+			this.node === document.body
+		) {
 			return Math.max(
-				body.scrollWidth,
-				body.offsetWidth,
-				html.clientWidth,
-				html.scrollWidth,
-				html.offsetWidth
+				document.body.scrollWidth,
+				document.body.offsetWidth,
+				document.documentElement.clientWidth,
+				document.documentElement.scrollWidth,
+				document.documentElement.offsetWidth
 			);
 		}
 		else {
@@ -500,13 +520,17 @@ $._nodeMethods.height = function(value) {
 		if(this.node === window) {
 			return W.getViewportHeight();
 		}
-		else if(this.node === document || this.node === html || this.node === body) {
+		else if(
+			this.node === document ||
+			this.node === document.documentElement ||
+			this.node === document.body
+		) {
 			return Math.max(
-				body.scrollHeight,
-				body.offsetHeight,
-				html.clientHeight,
-				html.scrollHeight,
-				html.offsetHeight
+				document.body.scrollHeight,
+				document.body.offsetHeight,
+				document.documentElement.clientHeight,
+				document.documentElement.scrollHeight,
+				document.documentElement.offsetHeight
 			);
 		}
 		else {
@@ -646,13 +670,18 @@ $._nodeMethods.on  = function(event, func) {
 		Number, Object
 */
 $._nodeMethods.scrollTop = function(value) {
-	if(this.node === window || this.node === document || this.node === html || this.node === body) {
+	if(
+		this.node === window ||
+		this.node === document ||
+		this.node === document.documentElement ||
+		this.node === document.body
+	) {
 		if(value !== undefined) {
-			scrollElement().scrollTop = value;
+			getScrollElement().scrollTop = value;
 			return this;
 		}
 		else {
-			return scrollElement().scrollTop;
+			return getScrollElement().scrollTop;
 		}
 	}
 	else {
@@ -676,13 +705,18 @@ $._nodeMethods.scrollTop = function(value) {
 		Number, Object
 */
 $._nodeMethods.scrollLeft = function(value) {
-	if(this.node === window || this.node === document || this.node === html || this.node === body) {
+	if(
+		this.node === window ||
+		this.node === document ||
+		this.node === document.documentElement ||
+		this.node === document.body
+	) {
 		if(value !== undefined) {
-			scrollElement().scrollLeft = value;
+			getScrollElement().scrollLeft = value;
 			return this;
 		}
 		else {
-			return scrollElement().scrollLeft;
+			return getScrollElement().scrollLeft;
 		}
 	}
 	else{

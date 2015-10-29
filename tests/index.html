@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>quarky</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="node_modules/qunitjs/qunit/qunit.css">
+		<script src="node_modules/qunitjs/qunit/qunit.js"></script>
+		<script src="node_modules/pyrsmk-quark/quark.min.js"></script>
+		<script src="../quarky.min.js"></script>
+		<style>
+			.test, .input, .checkbox {
+				visibility: hidden;
+				position: absolute;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="test"></div>
+		<input class="input" type="text">
+		<input class="checkbox" type="checkbox">
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		<script src="tests.js"></script>
+	</body>
+</html>
