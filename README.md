@@ -1,4 +1,4 @@
-Quarky 1.0.0
+Quarky 1.0.1
 =============
 
 Quarky is a DOM utility designed to work with [quark](https://github.com/pyrsmk/quark). It aims to be small and only handles common tasks.
@@ -50,6 +50,8 @@ API
 - addClass(string) : add a class
 - removeClass(string) : remove a class
 - hasClass(string) : verify if the class exist for that node
+- getClasses() : get all classes
+- clearClasses() : clear all classes
 - width() : get the width
 - width(integer) : set the width (shortcut to `css('width',value)`)
 - height() : get the height
