@@ -1,4 +1,4 @@
-/*! quarky 1.0.1 (https://github.com/pyrsmk/quarky) */
+/*! quarky 1.0.2 (https://github.com/pyrsmk/quarky) */
 
 var $ = window.quark.$,
     $$ = window.quark.$$,

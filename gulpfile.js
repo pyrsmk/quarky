@@ -39,7 +39,7 @@ gulp.task('build', ['version'], function() {
 			.pipe( jshint.reporter('jshint-stylish') )
 	);
 	streams.add(
-		gulp.src( ['./node_modules/pyrsmk-w/src/W.js', './src/quarky.js'] )
+		gulp.src( ['./node_modules/pyrsmk-w/src/W.min.js', './src/quarky.js'] )
 			.pipe( uglify() )
 			.pipe( concat('quarky.min.js') )
 			.pipe( gulp.dest('.') )
