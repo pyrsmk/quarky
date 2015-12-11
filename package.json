@@ -1,13 +1,13 @@
 {
   "name": "quarky",
   "description": "A tiny DOM utility for quark",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Aurélien Delogu <pyrsmk@dreamysource.fr> (http://dreamysource.fr)",
   "repository": {
     "type": "git",
     "url": "https://github.com/pyrsmk/quarky.git"
   },
-  "main": "src/quarky.js",
+  "main": "quarky.js",
   "keywords": [
     "dom",
     "css",
@@ -24,6 +24,7 @@
     "gulp": "^3.8.11",
     "gulp-concat": "^2.6.0",
     "gulp-jshint": "^1.11.0",
+    "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.3",
     "gulp-shell": "^0.4.1",
     "gulp-uglify": "^1.2.0",
