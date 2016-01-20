@@ -7,7 +7,7 @@
     root.W = factory();
   }
 }(this, function() {
-/*! W 1.4.1 (https://github.com/pyrsmk/W) */
+/*! W 1.4.2 (https://github.com/pyrsmk/W) */
 
 // Prepare
 var listeners = [],
@@ -104,8 +104,8 @@ function detectViewport(absolute) {
 	}
 }
 
-// Return W object
-return {
+// Define W object
+var W = {
 	getViewportWidth: function(absolute) {
 		return detectViewport(absolute).width;
 	},
@@ -135,7 +135,7 @@ return {
 return W;
 }));
 
-/*! quarky 1.0.3 (https://github.com/pyrsmk/quarky) */
+/*! quarky 1.0.5 (https://github.com/pyrsmk/quarky) */
 
 var $ = window.quark.$,
     $$ = window.quark.$$,
@@ -150,13 +150,15 @@ var $ = window.quark.$,
 function getScrollElement() {
 	if(!scrollElement) {
 		document.body.scrollTop += 1;
-		if(document.body.scrollTop) {
+		document.body.scrollLeft += 1;
+		if(document.body.scrollTop || document.body.scrollLeft) {
 			scrollElement = document.body;
 		}
 		else {
 			scrollElement = document.documentElement;
 		}
 		document.body.scrollTop -= 1;
+		document.body.scrollLeft -= 1;
 	}
 	return scrollElement;
 }

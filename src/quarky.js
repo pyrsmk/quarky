@@ -1,4 +1,4 @@
-/*! quarky 1.0.3 (https://github.com/pyrsmk/quarky) */
+/*! quarky 1.0.5 (https://github.com/pyrsmk/quarky) */
 
 var $ = window.quark.$,
     $$ = window.quark.$$,
@@ -13,13 +13,15 @@ var $ = window.quark.$,
 function getScrollElement() {
 	if(!scrollElement) {
 		document.body.scrollTop += 1;
-		if(document.body.scrollTop) {
+		document.body.scrollLeft += 1;
+		if(document.body.scrollTop || document.body.scrollLeft) {
 			scrollElement = document.body;
 		}
 		else {
 			scrollElement = document.documentElement;
 		}
 		document.body.scrollTop -= 1;
+		document.body.scrollLeft -= 1;
 	}
 	return scrollElement;
 }
