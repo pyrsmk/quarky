@@ -7,72 +7,75 @@
     root.W = factory();
   }
 }(this, function() {
-/*! W 1.4.2 (https://github.com/pyrsmk/W) */
+/*! W 1.6.2 (https://github.com/pyrsmk/W) */
 
 // Prepare
 var listeners = [],
-	trigger = false;
+	resize_trigger = false,
+	orientationchange = false,
+	orientationchange_trigger = false;
 
 // Catch window resize event
 if(window.addEventListener) {
 	if('onorientationchange' in window) {
-		window.addEventListener('orientationchange', function(){
-			trigger = true;
+		orientationchange = true;
+		window.addEventListener('orientationchange', function() {
+			orientationchange_trigger = true;
 		}, false);
 	}
-	else{
-		window.addEventListener('resize', function(){
-			trigger = true;
-		}, false);
-	}
+	window.addEventListener('resize', function() {
+		resize_trigger = true;
+	}, false);
 }
 else{
 	window.attachEvent('onresize', function() {
-		trigger = true;
+		resize_trigger = true;
 	});
 }
 
 // Verify resizes every 10ms
 setInterval(function() {
+	var trigger = false;
+	if(orientationchange) {
+		if(orientationchange_trigger && resize_trigger) {
+			trigger = true;
+		}
+	}
+	else if(resize_trigger) {
+		trigger = true;
+	}
 	if(trigger && document.documentElement.clientWidth) {
+		orientationchange_trigger = false;
+		resize_trigger = false;
 		for(var i=0, j=listeners.length; i<j; ++i) {
 			listeners[i].func();
 		}
-		trigger = false;
 	}
 }, 10);
 
 // Get screen orientation
 function getOrientation() {
+	var landscape;
 	if('orientation' in window) {
-		return !window.orientation ? 'portrait' : 'landscape';
+		// Mobiles
+		var orientation = window.orientation;
+		landscape = (orientation == 90 || orientation == -90);
 	}
-	else{
-		return document.documentElement.clientWidth > document.documentElement.clientHeight ? 'landscape' : 'portrait';
+	else {
+		// Desktop browsers
+		landscape = window.innerWidth > window.innerHeight;
 	}
+	return landscape ? 'landscape' : 'portrait';
 }
 
 // Viewport resolution detection
 function detectViewport(absolute) {
-	// Prepare
-	var screen_width,
-		screen_height,
-		values = [
-			{width: screen.availWidth, height: screen.availHeight},
-			{width: window.outerWidth, height: window.outerHeight},
-			{width: window.innerWidth, height: window.innerHeight}
-		],
-		i, j;
-	// Detect right screen resolution from orientation
-	if(/(iPad|iPhone|iPod)/g.test(navigator.userAgent) && getOrientation() == 'landscape') {
+	// Detect screen size
+	var screen_width = screen.width,
+		screen_height = screen.height;
+	if(getOrientation() == 'landscape' && screen_width < screen_height) {
 		screen_width = screen.height;
 		screen_height = screen.width;
-		// Override window.innerWidth (generally equals to 980)
-		values[2].width = screen_width;
-	}
-	else{
-		screen_width = screen.width;
-		screen_height = screen.height;
 	}
 	// Absolute mode
 	if(absolute) {
@@ -83,29 +86,25 @@ function detectViewport(absolute) {
 	}
 	// Relative mode
 	else {
-		// Note found values
-		for(i=0, j=values.length; i<j; ++i) {
-			if(values[i].width > screen_width || values[i].height > screen_height || !values[i].width || !values[i].height) {
-				values[i].note = 0;
-			}
-			else {
-				values[i].note = (screen_width - values[i].width) + (screen_height - values[i].height);
-			}
+		var w = window.innerWidth,
+			h = window.innerHeight;
+		if(!w || !h || w > screen_width || h > screen_height || w == 980) {
+			w = window.outerWidth;
+			h = window.outerHeight;
 		}
-		// Sort notes
-		values.sort(function(a, b) {
-			return b.note - a.note;
-		});
-		// Return the better values
-		return {
-			width: values[0].width,
-			height: values[0].height
-		};
+		if(!w || !h || w > screen_width || h > screen_height) {
+			w = screen.availWidth;
+			h = screen.availHeight;
+		}
+		return {width: w, height: h};
 	}
 }
 
 // Define W object
 var W = {
+	getViewportDimensions: function(absolute) {
+		return detectViewport(absolute);
+	},
 	getViewportWidth: function(absolute) {
 		return detectViewport(absolute).width;
 	},
@@ -129,13 +128,25 @@ var W = {
 				break;
 			}
 		}
+	},
+	clearListeners: function() {
+		listeners = [];
+	},
+	trigger: function(key) {
+		for(var i=0, j=listeners.length; i<j; ++i) {
+			if(typeof key == 'undefined' || listeners[i].key == key) {
+				listeners[i].func();
+			}
+		}
 	}
 };
 
 return W;
 }));
 
-/*! quarky 1.0.5 (https://github.com/pyrsmk/quarky) */
+/*! quarky 1.0.6 (https://github.com/pyrsmk/quarky) */
+
+;(function() {
 
 var $ = window.quark.$,
     $$ = window.quark.$$,
@@ -786,7 +797,7 @@ $._nodeMethods.clone = function() {
 	Return
 		Object
 */
-$._nodeMethods.on  = function(event, func) {
+$._nodeMethods.on = function(event, func) {
 	event = event.split(' ');
 	for(var i=0, j=event.length; i<j; ++i) {
 		if(this.node.addEventListener) {
@@ -899,3 +910,5 @@ $._nodeMethods.getComputedStyle = function(name, clean) {
 	}
 	return value;
 };
+	
+}());
