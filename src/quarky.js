@@ -1,4 +1,4 @@
-/*! quarky 1.0.5 (https://github.com/pyrsmk/quarky) */
+/*! quarky 1.0.6 (https://github.com/pyrsmk/quarky) */
 
 var $ = window.quark.$,
     $$ = window.quark.$$,
@@ -649,7 +649,7 @@ $._nodeMethods.clone = function() {
 	Return
 		Object
 */
-$._nodeMethods.on  = function(event, func) {
+$._nodeMethods.on = function(event, func) {
 	event = event.split(' ');
 	for(var i=0, j=event.length; i<j; ++i) {
 		if(this.node.addEventListener) {
