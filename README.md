@@ -69,7 +69,7 @@ API
 - scrollLeft() : get the scrollLeft property
 - scrollLeft(integer) : set the scrollLeft property
 - clone() : clone the node
-- on(event, callback) : add one or a list of events (like `change mouseout click`); return true to propagate the event
+- on(event, callback) : add one or a list of events (like `change mouseout click`)
 
 License
 -------
