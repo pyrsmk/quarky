@@ -1,9 +1,5 @@
-/*! quarky 1.0.6 (https://github.com/pyrsmk/quarky) */
-
-;(function() {
-
-var $ = window.quark.$,
-    $$ = window.quark.$$,
+var $ = quark.$,
+    $$ = quark.$$,
 	scrollElement;
 
 /*
@@ -764,5 +760,3 @@ $._nodeMethods.getComputedStyle = function(name, clean) {
 	}
 	return value;
 };
-	
-}());

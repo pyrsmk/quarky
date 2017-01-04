@@ -1,13 +1,13 @@
 {
   "name": "quarky",
   "description": "A tiny DOM utility for quark",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "author": "Aurélien Delogu <pyrsmk@dreamysource.fr> (http://dreamysource.fr)",
   "repository": {
     "type": "git",
     "url": "https://github.com/pyrsmk/quarky.git"
   },
-  "main": "quarky.js",
+  "main": "lib/quarky.js",
   "keywords": [
     "dom",
     "css",
@@ -21,15 +21,19 @@
     "email": "dev@dreamysource.fr"
   },
   "devDependencies": {
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.0",
+    "gulp-add-src": "^0.2.0",
     "gulp-concat": "^2.6.0",
-    "gulp-jshint": "^1.11.0",
+    "gulp-eslint": "^3.0.1",
+    "gulp-flowtype": "^1.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.3",
-    "gulp-shell": "^0.4.1",
-    "gulp-uglify": "^1.2.0",
-    "jshint-stylish": "^2.0.0",
-    "merge2": "^0.3.5"
+    "gulp-shell": "^0.4.2",
+    "gulp-uglify": "^2.0.0",
+    "gulp-umd": "^0.2.0",
+    "lodash": "^4.16.4",
+    "resolve": "^1.1.7",
+    "umd-templates": "0.0.3"
   },
   "dependencies": {
     "pyrsmk-w": "^1.6.0"
