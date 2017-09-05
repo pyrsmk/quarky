@@ -1,17 +1,17 @@
 var gulp = require('gulp'),
-	shell = require('gulp-shell'),
+    shell = require('gulp-shell'),
     name = __dirname.match(/\\([^\\]*)$/)[1],
     version = require('./package.json').version;
 
 // ======================================== gulp version
 
 gulp.task('version', function() {
-	var replace = require('gulp-replace');
-    
-	return gulp.src( './README.md' )
+    var replace = require('gulp-replace');
+
+    return gulp.src( './README.md' )
         .pipe( replace(/^([\w-]+) [0-9.]+/, '$1 ' + version) )
         .pipe( gulp.dest('.') );
-    
+
 });
 
 // ======================================== gulp lint
@@ -19,10 +19,10 @@ gulp.task('version', function() {
 gulp.task('lint', function() {
     var lint = require('gulp-eslint'),
         flow = require('gulp-flowtype');
-    
-	return gulp.src( './src/' + name + '.js' )
+
+    return gulp.src( './src/' + name + '.js' )
         .pipe( flow() )
-		.pipe( lint({
+        .pipe( lint({
             rules: {
                 "array-bracket-spacing": [2, "never"],
                 "block-scoped-var": 2,
@@ -49,37 +49,33 @@ gulp.task('build', ['version', 'lint'], function() {
     var concat = require('gulp-concat'),
         uglify = require('gulp-uglify'),
         rename = require('gulp-rename'),
-        //umd = require('gulp-umd'),
         add = require('gulp-add-src'),
+        insert = require('gulp-insert'),
         resolve = require('resolve'),
         _ = require('lodash'),
         dependencies = [];
-    
+
     (_.keys(require('./package.json').dependencies) || []).forEach(function(dep) {
         dependencies.unshift(resolve.sync(dep));
     });
-    
-	return gulp.src( './src/**' )
-                /*.pipe( umd({
-                    template: './node_modules/umd-templates/patterns/returnExportsGlobal.js',
-                    namespace: function() {
-                        return name;
-                    }
-                }) )*/
+
+    return gulp.src( './src/**' )
                 .pipe( add.prepend(dependencies) )
                 .pipe( concat(name + '.js') )
+                .pipe( insert.wrap('(function(){', '})();') )
                 .pipe( gulp.dest('./lib/') )
-				.pipe( uglify() )
-				.pipe( rename(name + '.min.js') )
-				.pipe( gulp.dest('./lib/') );
+                .pipe( uglify() )
+                .pipe( rename(name + '.min.js') )
+                .pipe( gulp.dest('./lib/') );
 });
 
 // ======================================== gulp publish
 
 gulp.task('publish', shell.task([
-	"git tag -a " + version + " -m '" + version + "'",
-	'git push --tags',
-	'npm publish'
+    'git push',
+    "git tag -a " + version + " -m '" + version + "'",
+    'git push --tags',
+    'npm publish'
 ]));
 
 // ======================================== gulp

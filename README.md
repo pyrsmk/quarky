@@ -1,5 +1,5 @@
 Quarky 1.1.0
-=============
+============
 
 Quarky is a DOM utility designed to work with [quark](https://github.com/pyrsmk/quark). It aims to be small and only handles common tasks.
 
