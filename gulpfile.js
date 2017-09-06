@@ -62,7 +62,7 @@ gulp.task('build', ['version', 'lint'], function() {
     return gulp.src( './src/**' )
                 .pipe( add.prepend(dependencies) )
                 .pipe( concat(name + '.js') )
-                .pipe( insert.wrap(';(function(){', '})();') )
+                .pipe( insert.wrap(';(function($,$$){', '})(quark.$,quark.$$);') )
                 .pipe( gulp.dest('./lib/') )
                 .pipe( uglify() )
                 .pipe( rename(name + '.min.js') )
